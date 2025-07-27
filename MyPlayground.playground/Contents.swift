@@ -86,3 +86,57 @@ shcool.infoshcool()
 //print("\(shcool.nameShcool) \n\(shcool.address.infoAddress()) \n\(shcool.director.infoDirector())")
 
 
+//2. Создайте протокол PaymentMethod с требованиями:
+//Свойство balance (текущий баланс)
+//Метод pay(amount: Double) -> Bool
+//Реализуйте протокол в:
+//Классе CreditCard (должен списывать сумму + 1% комиссии)
+//Классе CryptoWallet (должен проверять, хватает ли криптовалюты)
+//Напишите функцию processPayment(using method: PaymentMethod, amount: Double), которая обрабатывает платеж.
+
+protocol PaymentMethod {
+    var balance: Double { get }
+    
+    func pay(_ amount: Double) -> Bool
+    
+}
+
+class CreditCard: PaymentMethod {
+    var balance: Double = 2000
+    
+    func pay(_ amount: Double) -> Bool {
+        if balance >= (amount + (amount * 0.01)) {
+            balance -= amount + (amount * 0.01)
+            print("Сумма списания: \(amount + (amount * 0.01)). Комиссия составила: \(amount * 0.01)")
+        } else {
+            print("Недостаточно денег")
+            return false
+        }
+        return true
+    }
+    
+}
+let credit = CreditCard()
+//credit.pay(200)
+class CryptoWallet: PaymentMethod {
+    var balance: Double = 200
+    
+    func pay(_ amount: Double) -> Bool {
+        if amount <= balance {
+            print("У вас достаточно криповалюты")
+        } else {
+            print("У вас не достаточно криповалюты")
+            return false
+        }
+        return true
+    }
+}
+let crypto = CryptoWallet()
+//crypto.pay(201)
+
+func processPayment(method: PaymentMethod, amount: Double) {
+    method.pay(amount)
+}
+
+processPayment(method: credit, amount: 80)
+processPayment(method: crypto, amount: 567)
